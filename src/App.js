@@ -12,7 +12,13 @@ async function CloseNess(wordGoal, wordGuess) {
   return result;
 }
 
-const GoalWord = "apple"
+function getColor(value) {
+  const hue = (1 - value / 100) * 120;
+  const color = `hsl(${hue}, 100%, 50%)`;
+  return { backgroundColor: color };
+}
+
+const GoalWord = "tree"
 
 function Searchbar({value,onChange,onKeyDown}) {
       
@@ -33,7 +39,7 @@ function TextConversation({TextItems}) {
     <ol class="Convo">
       {TextItems.sort((a, b) => b.score - a.score).map((ItemText, index) => ( //sort by score 
         <li key={index}>
-          <div class="container">
+          <div class="container" style={getColor(ItemText.score)}>
             <div class="left">{ItemText.text}</div>
             <div class="right">{ItemText.score}</div>
           </div>
@@ -51,7 +57,7 @@ class TextAndScore {
 
   async calculateScore() {
     const score = await CloseNess(GoalWord, this.text);
-    this.score = Math.abs((score.toFixed(3)*100) - 100);
+    this.score = Math.abs((score*100) - 100).toFixed(2);
   }
 }
 
