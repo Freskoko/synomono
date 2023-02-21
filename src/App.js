@@ -13,8 +13,9 @@ async function CloseNess(wordGoal, wordGuess) {
 }
 
 function getColor(value) {
+  value = Math.abs(value-100)
   const hue = (1 - value / 100) * 120;
-  const color = `hsl(${hue}, 100%, 50%)`;
+  const color = `hsl(${hue}, 80%, 50%)`;
   return { backgroundColor: color };
 }
 
