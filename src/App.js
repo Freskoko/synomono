@@ -1,7 +1,18 @@
 import logo from './questionmark4.png';
 import './App.css';
 import { useState } from 'react';
+const tf = require('@tensorflow/tfjs');
+const use = require('@tensorflow-models/universal-sentence-encoder');
 
+async function CloseNess(wordGoal, wordGuess) {
+  const model = await use.load();
+  const embeddings = (await model.embed([wordGoal, wordGuess])).unstack();
+  const numGuess = tf.losses.cosineDistance(embeddings[0], embeddings[1], 0);
+  const result = await numGuess.array();
+  return result;
+}
+
+const GoalWord = "apple"
 
 function Searchbar({value,onChange,onKeyDown}) {
       
@@ -34,40 +45,45 @@ function TextConversation({TextItems}) {
 
 class TextAndScore {
   constructor(text) {
-    this.text = text
-    
-    const score = Math.floor(Math.random() * (1000 - 100) + 100) / 1000;
-    this.score = score
+    this.text = text;
+    this.score = null;
+  }
+
+  async calculateScore() {
+    const score = await CloseNess(GoalWord, this.text);
+    this.score = Math.abs((score.toFixed(3)*100) - 100);
   }
 }
-
 
 function App() {
 
   const [WrittenText,ChangeWrittenText] = useState("")
   const [Conversation,ChangeConversation] = useState([])
   const [animationDuration,ChangeAnimationDuration] = useState(20)
+  const [GuessCounter, ChangeGuessCounter] = useState(0)
+  const [LoadingState, ChangeLoadingState] = useState("")
   
   function handleTextChange(event) {
     ChangeWrittenText(event.target.value)
   }
 
-  function handleKeyPress(event){
+  async function handleKeyPress(event){
     if (event.key === 'Enter') {
       ChangeWrittenText("")
 
-      const newText = new TextAndScore(WrittenText)
-      const newConversation = [...Conversation, newText]
+      const newText = new TextAndScore(WrittenText);
+      await newText.calculateScore();
+      const newConversation = [...Conversation, newText];
 
       ChangeConversation(newConversation)
-
 
       const newAnimationDuration = animationDuration - 1
       if (newAnimationDuration != 0) {
 
         ChangeAnimationDuration(newAnimationDuration)
+        const NewGuessCounter = GuessCounter + 1
+        ChangeGuessCounter(NewGuessCounter)
       }
-
     }
   }
 
@@ -76,9 +92,12 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" style={{ animationDuration: `${animationDuration}s` }} />
-        <h1>
-          Guess the word?!
-        </h1>
+        <h2>
+          Guess the word?
+        </h2>
+        <p> 
+          Guesses = {GuessCounter}
+        </p>
         <Searchbar value = {WrittenText} onChange = {handleTextChange} onKeyDown = {handleKeyPress}/>
         <TextConversation TextItems={Conversation} />
 

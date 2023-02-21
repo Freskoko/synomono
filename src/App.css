@@ -3,6 +3,7 @@
 }
 
 .App-logo {
+  margin-top: 50px;
   height: 20vmin;
   pointer-events: none;
 }
@@ -46,6 +47,7 @@
 .searchbarTop{
   color: rgb(63, 37, 192);
   height: 30px;
+  width: 200px;
   font-size: 30px;
   border-radius: 10px;
   align-items: center;
