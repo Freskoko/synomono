@@ -3,7 +3,7 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 20vmin;
   pointer-events: none;
 }
 
@@ -14,12 +14,12 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #628ad9;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: top;
   font-size: calc(10px + 2vmin);
   color: white;
 }
@@ -29,10 +29,46 @@
 }
 
 @keyframes App-logo-spin {
-  from {
+  0% {
     transform: rotate(0deg);
   }
-  to {
+  100% {
     transform: rotate(360deg);
-  }
+ }
+}
+
+.Convo {
+  list-style-type:none;
+  position: relative; right:17px;
+  
+}
+
+.searchbarTop{
+  color: rgb(63, 37, 192);
+  height: 30px;
+  font-size: 30px;
+  border-radius: 10px;
+  align-items: center;
+  text-align: center; 
+  
+
+}
+
+.container {
+  border:#010101;
+  border-radius:10%;
+  border-style:groove;
+  width: 300px;
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+  background-color: rgb(57, 38, 77);
+}
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
 }
