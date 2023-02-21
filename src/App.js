@@ -77,7 +77,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" style={{ animationDuration: `${animationDuration}s` }} />
         <h1>
-          Guess the word?
+          Guess the word?!
         </h1>
         <Searchbar value = {WrittenText} onChange = {handleTextChange} onKeyDown = {handleKeyPress}/>
         <TextConversation TextItems={Conversation} />
