@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/synomono/static/css/main.dd63afc8.css",
+    "main.js": "/synomono/static/js/main.09bdbcb2.js",
+    "static/js/787.22c43ede.chunk.js": "/synomono/static/js/787.22c43ede.chunk.js",
+    "index.html": "/synomono/index.html",
+    "main.dd63afc8.css.map": "/synomono/static/css/main.dd63afc8.css.map",
+    "main.09bdbcb2.js.map": "/synomono/static/js/main.09bdbcb2.js.map",
+    "787.22c43ede.chunk.js.map": "/synomono/static/js/787.22c43ede.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.dd63afc8.css",
+    "static/js/main.09bdbcb2.js"
+  ]
+}
