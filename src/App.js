@@ -57,7 +57,7 @@ async function readTextFile(file) {
 function ButtonChange({onclick}) {
 
   return (
-    <button onClick={onclick}>
+    <button onPointerEnter={onclick}>
       Load words
     </button> 
   )
