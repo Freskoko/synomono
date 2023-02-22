@@ -1,15 +1,16 @@
 {
   "files": {
-    "main.css": "/synomono/static/css/main.dd63afc8.css",
-    "main.js": "/synomono/static/js/main.09bdbcb2.js",
+    "main.css": "/synomono/static/css/main.9df94d56.css",
+    "main.js": "/synomono/static/js/main.75fd013c.js",
     "static/js/787.22c43ede.chunk.js": "/synomono/static/js/787.22c43ede.chunk.js",
+    "static/media/savedwordsforSong.txt": "/synomono/static/media/savedwordsforSong.f1797b8c063ea5add9e8.txt",
     "index.html": "/synomono/index.html",
-    "main.dd63afc8.css.map": "/synomono/static/css/main.dd63afc8.css.map",
-    "main.09bdbcb2.js.map": "/synomono/static/js/main.09bdbcb2.js.map",
+    "main.9df94d56.css.map": "/synomono/static/css/main.9df94d56.css.map",
+    "main.75fd013c.js.map": "/synomono/static/js/main.75fd013c.js.map",
     "787.22c43ede.chunk.js.map": "/synomono/static/js/787.22c43ede.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.dd63afc8.css",
-    "static/js/main.09bdbcb2.js"
+    "static/css/main.9df94d56.css",
+    "static/js/main.75fd013c.js"
   ]
 }
