@@ -120,16 +120,22 @@ function App() {
       const newConversation = [...Conversation, newText];
 
       ChangeConversation(newConversation)
+      const NewGuessCounter = GuessCounter + 1
+      ChangeGuessCounter(NewGuessCounter)
 
-      const newAnimationDuration = animationDuration - 1
-      if (newAnimationDuration != 0) {
-
-        ChangeAnimationDuration(newAnimationDuration)
-        const NewGuessCounter = GuessCounter + 1
-        ChangeGuessCounter(NewGuessCounter)
+      
+      const newAnimationDuration = animationDuration - 1.0
+      
+      if (animationDuration > 1) {
+          ChangeAnimationDuration(newAnimationDuration)
+      }
+      
+      } else if (animationDuration <= 1 && animationDuration > 0.2) {
+          const newAnimationDuration = animationDuration - 0.1
+          ChangeAnimationDuration(newAnimationDuration)
       }
     }
-  }
+
 
 
   return (
