@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/synomono/static/css/main.9df94d56.css",
-    "main.js": "/synomono/static/js/main.54e0adca.js",
+    "main.js": "/synomono/static/js/main.d41623b6.js",
     "static/js/787.22c43ede.chunk.js": "/synomono/static/js/787.22c43ede.chunk.js",
     "static/media/savedwordsforSong.txt": "/synomono/static/media/savedwordsforSong.f1797b8c063ea5add9e8.txt",
     "index.html": "/synomono/index.html",
     "main.9df94d56.css.map": "/synomono/static/css/main.9df94d56.css.map",
-    "main.54e0adca.js.map": "/synomono/static/js/main.54e0adca.js.map",
+    "main.d41623b6.js.map": "/synomono/static/js/main.d41623b6.js.map",
     "787.22c43ede.chunk.js.map": "/synomono/static/js/787.22c43ede.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.9df94d56.css",
-    "static/js/main.54e0adca.js"
+    "static/js/main.d41623b6.js"
   ]
 }
