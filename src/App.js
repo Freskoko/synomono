@@ -48,16 +48,10 @@ function TextConversation({TextItems}) {
   );
 }
 
-async function readTextFile(file) {
-  const response = await fetch(file);
-  const text = await response.text();
-  return text.split('\n');
-}
-
 function ButtonChange({onclick}) {
 
   return (
-    <button onPointerEnter={onclick}>
+    <button onClick={onclick}>
       Load words
     </button> 
   )
@@ -88,7 +82,7 @@ function App() {
 
   const [WrittenText,ChangeWrittenText] = useState("")
   const [Conversation,ChangeConversation] = useState([])
-  const [animationDuration,ChangeAnimationDuration] = useState(20)
+  const [animationDuration,ChangeAnimationDuration] = useState(20.0)
   const [GuessCounter, ChangeGuessCounter] = useState(0)
   // const [LoadingState, ChangeLoadingState] = useState("")
   const [LongList,ChangeLongList] = useState(["one","two","three"])
@@ -98,17 +92,21 @@ function App() {
     ChangeWrittenText(event.target.value)
   }
 
-  async function handlebuttonclick() {
-    fetch(textfile)
-    .then((response) => response.text())
-    .then((textContent) => {
-      const lines = textContent.replaceAll("\r","").split("\n") 
-      ChangeLongList(lines)
+  //ChangeLongList
+  //TODO UPDATE THE GUESS WORD
 
-      console.log(lines.length)
-      console.log(lines)
-    })
-
+  function handlebuttonclick() {
+    console.log("clicked");
+  
+    fetch("http://localhost:5000/longlist")  // Fetch data from the Flask app running on port 5000
+      .then(response => {
+        console.log("fetching");
+        return response.json();  // Parse the response as JSON
+      })
+      .then(data => {
+        ChangeLongList(data.listofwords);
+        console.log("new word updated!");
+      });
   }
 
   async function handleKeyPress(event){
@@ -117,25 +115,26 @@ function App() {
 
       const newText = new TextAndScore(WrittenText);
       await newText.calculateScore2(LongList);
-      const newConversation = [...Conversation, newText];
 
+      const newConversation = [...Conversation, newText];
       ChangeConversation(newConversation)
+
       const NewGuessCounter = GuessCounter + 1
       ChangeGuessCounter(NewGuessCounter)
 
-      
       const newAnimationDuration = animationDuration - 1.0
-      
+
       if (animationDuration > 1) {
-          ChangeAnimationDuration(newAnimationDuration)
+        ChangeAnimationDuration(newAnimationDuration)
       }
-      
-      } else if (animationDuration <= 1 && animationDuration > 0.2) {
-          const newAnimationDuration = animationDuration - 0.1
-          ChangeAnimationDuration(newAnimationDuration)
-      }
+
+    } else if (animationDuration <= 1 && animationDuration > 0.2) {  
+
+      const newAnimationDuration = animationDuration - 0.1
+      ChangeAnimationDuration(newAnimationDuration)
     }
 
+  }
 
 
   return (
@@ -143,7 +142,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" style={{ animationDuration: `${animationDuration}s` }} />
         <h2>
-          Guess the word?
+          Guess the word? 
         </h2>
         <div>
         <ButtonChange onclick = {handlebuttonclick}/>
