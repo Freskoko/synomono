@@ -1,7 +1,11 @@
 import logo from './questionmark4.png';
 import './App.css';
 import { useState } from 'react';
-import textfile from './savedwordsforSong.txt'
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+
+import Admin from './Admin.js'; // Import the Admin component
+
+
 
 function getColor(value) {
   let hue;
@@ -78,7 +82,7 @@ class TextAndScore {
     }
 }
 
-function App() {
+function Home() {
 
   const [WrittenText,ChangeWrittenText] = useState("")
   const [Conversation,ChangeConversation] = useState([])
@@ -144,6 +148,7 @@ function App() {
         <h2>
           Guess the word? 
         </h2>
+        <Link to="/admin">admin</Link>
         <div>
         <ButtonChange onclick = {handlebuttonclick}/>
         </div>
@@ -161,5 +166,18 @@ function App() {
     </div>
   );
 }
+
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home/>} />
+        <Route path="/admin" element={<Admin/>} />
+      </Routes>
+    </Router>
+  );
+}
+
 
 export default App;

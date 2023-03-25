@@ -1,7 +1,7 @@
 {
   "name": "my-app3",
   "version": "0.1.0",
-  "homepage": "https://Freskoko.github.io/synomono",
+  "homepage": ".",
   "private": true,
   "dependencies": {
     "@tensorflow-models/universal-sentence-encoder": "^1.3.3",
@@ -15,6 +15,7 @@
     "natural": "^6.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.2.1",
     "react-scripts": "^5.0.1",
     "util": "^0.12.5",
     "web-vitals": "^2.1.4",
