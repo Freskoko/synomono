@@ -102,13 +102,13 @@ function Home() {
   function handlebuttonclick() {
     console.log("clicked");
   
-    fetch("http://localhost:5000/longlist")  // Fetch data from the Flask app running on port 5000
+    fetch("http://localhost:5000/getwordandlist")  // Fetch data from the Flask app running on port 5000
       .then(response => {
         console.log("fetching");
         return response.json();  // Parse the response as JSON
       })
       .then(data => {
-        ChangeLongList(data.listofwords);
+        ChangeLongList(data.wordlist);
         console.log("new word updated!");
       });
   }

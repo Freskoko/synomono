@@ -1,8 +1,10 @@
 from backendwords import opendict
 from backendwords import findsimilarto
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
-import random
+import random   
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql.expression import func
 
 app = Flask(__name__)
 CORS(app, origins=['http://localhost:3000'])  # Allow requests from the React app running on port 3000
@@ -11,37 +13,75 @@ superdict = opendict()
 
 #------------
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///similars.db'
-# db = SQLAlchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///words.db'  # Use SQLite database file named words.db
+db = SQLAlchemy(app)
 
-# class SimilarWord(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     word = db.Column(db.String, nullable=False)
-#     similar_to = db.Column(db.String, nullable=False)
-# db.create_all()
+class Word(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    word = db.Column(db.String, unique=True, nullable=False)
+    similar_words = db.relationship('SimilarWord', backref='word', lazy=True)
 
-# @app.route('/add_similar_words', methods=['POST'])
-# def add_similar_words():
-#     word = request.form['word']
-#     similar_words = findsimilarto(word, _dict)
+class SimilarWord(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    word_id = db.Column(db.Integer, db.ForeignKey('word.id'), nullable=False)
+    similar_word = db.Column(db.String, nullable=False)
 
-#     for similar_word in similar_words:
-#         new_entry = SimilarWord(word=similar_word, similar_to=word)
-#         db.session.add(new_entry)
+with app.app_context():
+    db.create_all()
 
-#     db.session.commit()
-#     return jsonify({"message": "Successfully added similar words to the database."})
+@app.route("/addword", methods=["POST"])
+def add_word():
+    data = request.get_json()
+    word = data.get("word")
+    print(f"received word {word}")
+    print("finding similar words (this could take some time)")
+    similar_words_list = findsimilarto(word,superdict)
+    print(f"found similar words to {word}")
 
-# @app.route('/get_similar_words', methods=['GET'])
-# def get_similar_words():
-#     word = request.args.get('word')
-#     similar_words = SimilarWord.query.filter_by(similar_to=word).all()
-#     result = [similar_word.word for similar_word in similar_words]
-#     return jsonify(result)
+    if not word:
+        return jsonify({"error": "Word missing"}), 400
+    
+    print(f"adding to database for word {word}")
 
-#------------
+    new_word = Word(word=word)
+    db.session.add(new_word)
+    db.session.commit()
+
+    for similar_word in similar_words_list:
+        new_similar_word = SimilarWord(word_id=new_word.id, similar_word=similar_word)
+        db.session.add(new_similar_word)
+    db.session.commit()
+
+    return jsonify({"message": "Word and similar words added successfully"}), 201
 
 
+@app.route("/getwordandlist")
+def getwordandlist():
+    # Get a random word from the database
+    random_word = Word.query.order_by(func.random()).first()
+
+    # Get the corresponding long list of similar words
+    similar_words = SimilarWord.query.filter_by(word_id=random_word.id).all()
+
+    # Extract the similar words into a list
+    word_list = [similar_word.similar_word for similar_word in similar_words]
+
+    print(random_word)
+
+    return jsonify({"randomword": random_word.word, "wordlist": word_list}), 200
+
+@app.route("/cleardb")
+def cleardb():
+    Word.query.delete()
+    SimilarWord.query.delete()
+
+    # Commit the changes to the database
+    db.session.commit()
+
+    return "database cleared"
+
+
+#--------------
 
 differentguesses = ["cow"]
 
