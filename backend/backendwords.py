@@ -21,15 +21,14 @@ def find_similar_word(word, emmbedes, limit,emmbed_dict):
         nearest = sorted(emmbed_dict.keys(), key=lambda w: spatial.distance.euclidean(emmbed_dict[w], emmbedes))
         return nearest[:limit]
 
-print("hey2")
+print("Intializing ML model")
 
 def has_numbers(inputString):
     inputString = unicodedata.normalize('NFKD', inputString).encode('ascii', 'ignore').decode('utf-8')
     return bool(re.search(r'\d', inputString))
 
-
 def opendict():
-    print("hey0")
+    print("Creating dict db from txt-file")
     emmbed_dict = {}
     with open("data\glove.6B.300d.txt",'r', encoding="utf-8") as f:
         for line in f:

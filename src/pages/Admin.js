@@ -12,6 +12,7 @@ function Searchbar({ changeword }) {
     if (e.key == "Enter") {
       changeword(value);
       console.log(value)
+      setValue("")
     }
   }
 
@@ -43,28 +44,28 @@ function ListAllWords({ mainword, itemstorender }){
           </ul>
         </div>
       );
-    }
+}
 
-function RenderButton({ renderFunc , changemainword}){
+function RenderButton({ renderFunc , changemainword }){
 
     function handleClickRender() {
         console.log("clicked");
     
-        fetch("http://localhost:5000/getwordandlist")  // Fetch data from the Flask app running on port 5000
+        fetch("http://localhost:5000/getallkeywords")  // Fetch data from the Flask app running on port 5000
         .then(response => {
             console.log("fetching");
             return response.json();  // Parse the response as JSON
         })
         .then(data => {
-            renderFunc(data.wordlist.slice(0,20));
-            changemainword(data.randomword)
-            console.log("new word updated!");
+            renderFunc(data.keyword_list);
+            // changemainword(data.randomword)
+            console.log("listing all words");
         });
     }
 
     return(
         <button onClick={handleClickRender}>
-            Click me to render items
+            Click me to show all keywords
         </button>
     )
 }

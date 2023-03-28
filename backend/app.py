@@ -65,10 +65,22 @@ def getwordandlist():
 
     # Extract the similar words into a list
     word_list = [similar_word.similar_word for similar_word in similar_words]
+    word_list.insert(0,random_word.word)
 
-    print(random_word)
+    print(random_word.word)
 
     return jsonify({"randomword": random_word.word, "wordlist": word_list}), 200
+
+@app.route("/getallkeywords")
+def getallkeywords():
+
+    word_list = Word.query.all()
+    
+    keyword_list = [word.word for word in word_list]
+
+    print(keyword_list)
+
+    return jsonify({"keyword_list":keyword_list})
 
 @app.route("/cleardb")
 def cleardb():
@@ -77,6 +89,7 @@ def cleardb():
 
     # Commit the changes to the database
     db.session.commit()
+    print("DB cleared")
 
     return "database cleared"
 
