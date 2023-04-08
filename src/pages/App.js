@@ -1,11 +1,9 @@
 import logo from './questionmark4.png';
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
 import Admin from './Admin.js'; // Import the Admin component
-
-
 
 function getColor(value) {
   let hue;
@@ -83,23 +81,89 @@ class TextAndScore {
     }
 }
 
+//TODO
+function Overlay({ onClose, onWordClick  }) {
+
+  const [AllWords,ChangeAllWords] = useState([])
+
+  useEffect(() => {
+    fetch("http://localhost:5000/getallwordsid")
+      .then((response) => {
+        console.log("fetching");
+        return response.json();
+      })
+      .then((data) => {
+        ChangeAllWords(data.wordlist);
+        console.log("AllWords");
+      });
+  }, []);
+
+  function HandleButtonClickChangeLongList(id) {
+    fetch("http://localhost:5000/getsimilarwordsfromid", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ word_id: id }),
+    }).then((response) => {
+      console.log("fetching getsimilarwordsfromid");
+      return response.json();
+    })
+    .then((data) => {
+      // Call the onWordClick prop to update the LongList state in the Home component
+      onWordClick(data.wordlist);
+      console.log("AllWords");
+    });
+  }
+
+// ... rest of the Overlay component
+
+
+
+  return (
+    <div className="overlay">
+      <div className="overlay-content">
+        <h2>Available Words</h2>
+        <ul>
+          {AllWords.map((word, index) => (
+            <li 
+              key={index}>
+              
+              <button onClick={() => HandleButtonClickChangeLongList(word)}>{word}</button>
+            
+            </li>
+          ))}
+        </ul>
+        <button onClick={onClose}>Close</button>
+      </div>
+    </div>
+  );
+}
+
 function Home() {
 
   const [WrittenText,ChangeWrittenText] = useState("")
   const [Conversation,ChangeConversation] = useState([])
   const [animationDuration,ChangeAnimationDuration] = useState(20.0)
   const [GuessCounter, ChangeGuessCounter] = useState(0)
-  // const [LoadingState, ChangeLoadingState] = useState("")
   const [LongList,ChangeLongList] = useState(["one","two","three"])
   const [answerToQuestion,setanswerToQuestion] = useState("answer")
+
+  const [showOverlay, setShowOverlay] = useState(false);
+
+  function toggleOverlay() {
+    setShowOverlay(!showOverlay);
+  }
+
+
+  function handleWordClick(word) {
+    ChangeLongList(word);
+  }
 
 
   function handleTextChange(event) {
     ChangeWrittenText(event.target.value)
   }
-
-  //ChangeLongList
-  //TODO UPDATE THE GUESS WORD
 
   function handlebuttonclick() {
     console.log("clicked");
@@ -139,18 +203,16 @@ function Home() {
       const newAnimationDuration = animationDuration - 0.1
       ChangeAnimationDuration(newAnimationDuration)
     }
-
   }
 
   function GuessedSearchbar({ setanswerToQuestion }) {
-    const [Guessed, setGuessed] = useState("");
+    const [Guessed, setGuessed] = useState("Ask a question about the word");
   
     function handleChange(event) {
       setGuessed(event.target.value);
       // console.log(Guessed)
     }
 
-    //TODO
     async function HandleGuessChange(event){
       if (event.key === 'Enter') {
 
@@ -162,7 +224,7 @@ function Home() {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ question:Guessed, word:"snake" }),
+            body: JSON.stringify({ question:Guessed, word:LongList[0] }),
 
           });
     
@@ -178,12 +240,9 @@ function Home() {
           console.error('Error sending request:', error);
         }
         
-      
-  
-        setGuessed("")
+        setGuessed("is the word ")
       }
     }
-    //TODO
   
     return (
       <input
@@ -201,19 +260,29 @@ function Home() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" style={{ animationDuration: `${animationDuration}s` }} />
+        {showOverlay && (
+          <Overlay onClose={toggleOverlay} words={LongList} onWordClick={handleWordClick} />
+        )}
+        
         <h2>
           Guess the word? 
         </h2>
+        <button onClick={toggleOverlay}>Show Available Words</button>
         {/* Searchbar({value,onChange,onKeyDown}) */}
-        <GuessedSearchbar setanswerToQuestion = {setanswerToQuestion}/>
-        <p>{ answerToQuestion }</p>
-        <Link to="/admin">admin</Link>
+        <div className="sidebar">
+          <GuessedSearchbar setanswerToQuestion = {setanswerToQuestion}/>
+          <p>{ answerToQuestion }</p>
+        </div>
+
+        {/* <Link to="/admin">admin</Link> */}
         <div>
         <ButtonChange onclick = {handlebuttonclick}/>
         </div>
-        <p> 
-          Guesses = {GuessCounter}
-        </p>
+        <div className = "sidebarguesses"> 
+          <p> 
+            Guesses = {GuessCounter}
+          </p>
+        </div>
         <Searchbar value = {WrittenText} onChange = {handleTextChange} onKeyDown = {handleKeyPress}/>
         <TextConversation TextItems={Conversation} />
 

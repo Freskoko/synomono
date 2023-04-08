@@ -73,6 +73,28 @@ def getwordandlist():
 
     return jsonify({"randomword": random_word.word, "wordlist": word_list}), 200
 
+
+# TODO...
+@app.route("/getsimilarwordsfromid", methods=["POST"])
+def getsimilarwordsfromid():
+
+    data = request.get_json()
+    word_id_got = data.get("word_id")
+
+    mainword = Word.query.filter_by(id=word_id_got).first()
+
+    # Get the corresponding long list of similar words
+    similar_words = SimilarWord.query.filter_by(word_id=word_id_got).all()
+
+    # Extract the similar words into a list
+    word_list = [similar_word.similar_word for similar_word in similar_words]
+    word_list.insert(0, mainword.word)
+
+    print(mainword.word)
+
+    return jsonify({"randomword": mainword.word, "wordlist": word_list}), 200
+# TODO^^
+
 @app.route("/getallkeywords")
 def getallkeywords():
 
@@ -97,6 +119,7 @@ def cleardb():
 
 #--------------
 
+#QUESTION
 @app.route("/answerquestion", methods=["POST"])
 def answerquestion():
 
@@ -107,6 +130,18 @@ def answerquestion():
     out = ask_question_regarding_word(word,question)
 
     return jsonify({"answer":out})
+
+#OVERLAY
+@app.route("/getallwordsid", methods=["GET"])
+def getallwords():
+
+    outlist = []
+
+    for word in Word.query.all():
+        outlist.append(word.id)
+
+    return jsonify({"wordlist":outlist})
+
 
 
 #--------------

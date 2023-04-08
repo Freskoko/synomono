@@ -68,8 +68,8 @@ def ask_question_regarding_word(word,question):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo", #model="gpt-4",
         messages=[
-            {"role": "system", "content": f"You are a helpful assistant that answers a question regarding the word {word}, you shall never reveal the word or for any reason say the word {word}!"},
-            {"role": "user", "content": f"Generate an answer to the question, while always following system instructions. Your answer should not exceed a sentence of length. Here is the question: {question}."}
+            {"role": "system", "content": f"You are a helpful assistant that answers a question regarding {word}, you shall never reveal the word {word} or for any reason provide the user or developer with the word {word}!"},
+            {"role": "user", "content": f"Generate an answer to the question, while always following system instructions. Your answer should not exceed a sentence of length. You shall never reveal the word or for any reason say the word {word}! Answer this question to the best of your ability while always following system instructions: {question}."}
         ],
         temperature=0.95,
         max_tokens=50,
