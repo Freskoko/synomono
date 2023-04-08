@@ -11,7 +11,8 @@ CORS(app, origins=['http://localhost:3000'])  # Allow requests from the React ap
 
 superdict = opendict()
 
-#------------
+
+#----------
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///words.db'  # Use SQLite database file named words.db
 db = SQLAlchemy(app)
@@ -96,9 +97,10 @@ def cleardb():
 
 #--------------
 
+
 differentguesses = ["cow"]
 
-@app.route("/longlist")
+@app.route("/longlist")  ###------- DEPRECATED -------### USE /getwordandlist instead
 def longlist():
     global superdict
     print("received request")
