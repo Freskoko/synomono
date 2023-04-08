@@ -267,7 +267,7 @@ function Home() {
         <h2>
           Guess the word? 
         </h2>
-        <button onClick={toggleOverlay}>Show Available Words</button>
+        <button onClick={toggleOverlay}>Select Word to Guess</button>
         {/* Searchbar({value,onChange,onKeyDown}) */}
         <div className="sidebar">
           <GuessedSearchbar setanswerToQuestion = {setanswerToQuestion}/>
@@ -276,7 +276,7 @@ function Home() {
 
         {/* <Link to="/admin">admin</Link> */}
         <div>
-        <ButtonChange onclick = {handlebuttonclick}/>
+        {/* <ButtonChange onclick = {handlebuttonclick}/> */}
         </div>
         <div className = "sidebarguesses"> 
           <p> 
