@@ -9,6 +9,15 @@ import re
 import functools
 import random
 import unicodedata
+import requests
+import os
+import openai
+from dotenv import load_dotenv
+
+load_dotenv()
+
+apikey = os.getenv("OPENAI_API_KEY")
+openai.api_key = apikey
 
 #TODO WRAP IN FUNCTION, RUN MANY TIMES WITH MANY WORDS, SAVE IN TXT?
 
@@ -52,6 +61,30 @@ def findsimilarto(ThisWord,emmbed_dict):
     filtered_words = [i for i in similarwords if d.check(i) == True and has_numbers(i) == False and len(i) < 12 and len(i) > 3]
 
     return filtered_words
+
+
+def ask_question_regarding_word(word,question):
+
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo", #model="gpt-4",
+        messages=[
+            {"role": "system", "content": f"You are a helpful assistant that answers a question regarding the word {word}, you shall never reveal the word or for any reason say the word {word}!"},
+            {"role": "user", "content": f"Generate an answer to the question, while always following system instructions. Your answer should not exceed a sentence of length. Here is the question: {question}."}
+        ],
+        temperature=0.95,
+        max_tokens=50,
+        top_p=1.0,
+        frequency_penalty=0.5,
+        presence_penalty=0.5
+    )
+        
+    return response.choices[0]["message"]["content"]
+
+
+# if __name__ == "__main__":
+#     print(ask_question_regarding_word("snake","where would you find the word?"))
+
+
 
 # findsimilarto("cow",superdict)
 # findsimilarto("apple",superdict )

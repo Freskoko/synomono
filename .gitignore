@@ -10,6 +10,8 @@
 
 # production
 /build
+/.env
+/backend/.env
 
 /backend/data
 /backend/__pycache__

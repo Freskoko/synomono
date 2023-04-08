@@ -1,5 +1,6 @@
 from backendwords import opendict
 from backendwords import findsimilarto
+from backendwords import ask_question_regarding_word
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import random   
@@ -93,6 +94,19 @@ def cleardb():
     print("DB cleared")
 
     return "database cleared"
+
+#--------------
+
+@app.route("/answerquestion", methods=["POST"])
+def answerquestion():
+
+    data = request.get_json()
+    word = data.get("word")
+    question = data.get("question")
+
+    out = ask_question_regarding_word(word,question)
+
+    return jsonify({"answer":out})
 
 
 #--------------

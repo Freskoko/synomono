@@ -56,6 +56,17 @@
 
 }
 
+.searchbarTopLong{
+  color: rgb(63, 37, 192);
+  height: 30px;
+  width: 800px;
+  font-size: 30px;
+  border-radius: 10px;
+  align-items: center;
+  text-align: center; 
+
+}
+
 .container {
   border:#010101;
   border-radius:10%;

@@ -36,6 +36,7 @@ function Searchbar({value,onChange,onKeyDown}) {
     );
 }
 
+
 function TextConversation({TextItems}) {
 
   return (
@@ -90,6 +91,7 @@ function Home() {
   const [GuessCounter, ChangeGuessCounter] = useState(0)
   // const [LoadingState, ChangeLoadingState] = useState("")
   const [LongList,ChangeLongList] = useState(["one","two","three"])
+  const [answerToQuestion,setanswerToQuestion] = useState("answer")
 
 
   function handleTextChange(event) {
@@ -140,6 +142,60 @@ function Home() {
 
   }
 
+  function GuessedSearchbar({ setanswerToQuestion }) {
+    const [Guessed, setGuessed] = useState("");
+  
+    function handleChange(event) {
+      setGuessed(event.target.value);
+      // console.log(Guessed)
+    }
+
+    //TODO
+    async function HandleGuessChange(event){
+      if (event.key === 'Enter') {
+
+        console.log(Guessed)
+
+        try {
+          const response = await fetch('http://localhost:5000/answerquestion', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ question:Guessed, word:"snake" }),
+
+          });
+    
+          const data = await response.json();
+    
+          if (response.status === 200) {
+            console.log('Asked question, got this back:', data);
+            setanswerToQuestion(data.answer)
+          } else {
+            console.error('Error asking question got this back:', data);
+          }
+        } catch (error) {
+          console.error('Error sending request:', error);
+        }
+        
+      
+  
+        setGuessed("")
+      }
+    }
+    //TODO
+  
+    return (
+      <input
+        className="searchbarTopLong"
+        type="text"
+        value={Guessed}
+        onChange={handleChange}
+        onKeyDown={HandleGuessChange}
+      />
+    );
+  }
+
 
   return (
     <div className="App">
@@ -148,6 +204,9 @@ function Home() {
         <h2>
           Guess the word? 
         </h2>
+        {/* Searchbar({value,onChange,onKeyDown}) */}
+        <GuessedSearchbar setanswerToQuestion = {setanswerToQuestion}/>
+        <p>{ answerToQuestion }</p>
         <Link to="/admin">admin</Link>
         <div>
         <ButtonChange onclick = {handlebuttonclick}/>
