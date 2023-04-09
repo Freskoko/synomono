@@ -34,7 +34,6 @@ function Searchbar({value,onChange,onKeyDown}) {
     );
 }
 
-
 function TextConversation({TextItems}) {
 
   return (
@@ -49,15 +48,6 @@ function TextConversation({TextItems}) {
       ))}
     </ol>
   );
-}
-
-function ButtonChange({onclick}) {
-
-  return (
-    <button onClick={onclick}>
-      Load words
-    </button> 
-  )
 }
 
 class TextAndScore {
@@ -78,12 +68,10 @@ class TextAndScore {
     else{
       this.score = val
     }
-    }
+  }
 }
 
-//TODO
-function Overlay({ onClose, onWordClick  }) {
-
+function Overlay({ onClose, onWordClick, ChangeConversation  }) {
   const [AllWords,ChangeAllWords] = useState([])
 
   useEffect(() => {
@@ -112,13 +100,10 @@ function Overlay({ onClose, onWordClick  }) {
     .then((data) => {
       // Call the onWordClick prop to update the LongList state in the Home component
       onWordClick(data.wordlist);
+      ChangeConversation([])
       console.log("AllWords");
     });
   }
-
-// ... rest of the Overlay component
-
-
 
   return (
     <div className="overlay">
@@ -140,6 +125,55 @@ function Overlay({ onClose, onWordClick  }) {
   );
 }
 
+function GuessedSearchbar({ setanswerToQuestion, LongList}) {
+  const [Guessed, setGuessed] = useState("Ask a question about the word");
+
+  function handleChange(event) {
+    setGuessed(event.target.value);
+  }
+
+  async function HandleGuessChange(event){
+    if (event.key === 'Enter') {
+
+      console.log(Guessed)
+
+      try {
+        const response = await fetch('http://localhost:5000/answerquestion', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ question:Guessed, word:LongList[0] }),
+
+        });
+  
+        const data = await response.json();
+  
+        if (response.status === 200) {
+          console.log('Asked question, got this back:', data);
+          setanswerToQuestion(data.answer)
+        } else {
+          console.error('Error asking question got this back:', data);
+        }
+      } catch (error) {
+        console.error('Error sending request:', error);
+      }
+      
+      setGuessed("is the word ")
+    }
+  }
+
+  return (
+    <input
+      className="searchbarTopLong"
+      type="text"
+      value={Guessed}
+      onChange={handleChange}
+      onKeyDown={HandleGuessChange}
+    />
+  );
+}
+
 function Home() {
 
   const [WrittenText,ChangeWrittenText] = useState("")
@@ -148,35 +182,18 @@ function Home() {
   const [GuessCounter, ChangeGuessCounter] = useState(0)
   const [LongList,ChangeLongList] = useState(["one","two","three"])
   const [answerToQuestion,setanswerToQuestion] = useState("answer")
-
   const [showOverlay, setShowOverlay] = useState(false);
 
   function toggleOverlay() {
     setShowOverlay(!showOverlay);
   }
 
-
   function handleWordClick(word) {
     ChangeLongList(word);
   }
 
-
   function handleTextChange(event) {
     ChangeWrittenText(event.target.value)
-  }
-
-  function handlebuttonclick() {
-    console.log("clicked");
-  
-    fetch("http://localhost:5000/getwordandlist")  // Fetch data from the Flask app running on port 5000
-      .then(response => {
-        console.log("fetching");
-        return response.json();  // Parse the response as JSON
-      })
-      .then(data => {
-        ChangeLongList(data.wordlist);
-        console.log("new word updated!");
-      });
   }
 
   async function handleKeyPress(event){
@@ -205,79 +222,24 @@ function Home() {
     }
   }
 
-  function GuessedSearchbar({ setanswerToQuestion }) {
-    const [Guessed, setGuessed] = useState("Ask a question about the word");
-  
-    function handleChange(event) {
-      setGuessed(event.target.value);
-      // console.log(Guessed)
-    }
-
-    async function HandleGuessChange(event){
-      if (event.key === 'Enter') {
-
-        console.log(Guessed)
-
-        try {
-          const response = await fetch('http://localhost:5000/answerquestion', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ question:Guessed, word:LongList[0] }),
-
-          });
-    
-          const data = await response.json();
-    
-          if (response.status === 200) {
-            console.log('Asked question, got this back:', data);
-            setanswerToQuestion(data.answer)
-          } else {
-            console.error('Error asking question got this back:', data);
-          }
-        } catch (error) {
-          console.error('Error sending request:', error);
-        }
-        
-        setGuessed("is the word ")
-      }
-    }
-  
-    return (
-      <input
-        className="searchbarTopLong"
-        type="text"
-        value={Guessed}
-        onChange={handleChange}
-        onKeyDown={HandleGuessChange}
-      />
-    );
-  }
-
-
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" style={{ animationDuration: `${animationDuration}s` }} />
         {showOverlay && (
-          <Overlay onClose={toggleOverlay} words={LongList} onWordClick={handleWordClick} />
+          <Overlay onClose={toggleOverlay} words={LongList} onWordClick={handleWordClick} ChangeConversation={ChangeConversation}/>
         )}
         
         <h2>
           Guess the word? 
         </h2>
         <button onClick={toggleOverlay}>Select Word to Guess</button>
-        {/* Searchbar({value,onChange,onKeyDown}) */}
+        
         <div className="sidebar">
-          <GuessedSearchbar setanswerToQuestion = {setanswerToQuestion}/>
+          <GuessedSearchbar setanswerToQuestion = {setanswerToQuestion} LongList={LongList}/>
           <p>{ answerToQuestion }</p>
         </div>
-
-        {/* <Link to="/admin">admin</Link> */}
-        <div>
-        {/* <ButtonChange onclick = {handlebuttonclick}/> */}
-        </div>
+        
         <div className = "sidebarguesses"> 
           <p> 
             Guesses = {GuessCounter}
@@ -286,15 +248,10 @@ function Home() {
         <Searchbar value = {WrittenText} onChange = {handleTextChange} onKeyDown = {handleKeyPress}/>
         <TextConversation TextItems={Conversation} />
 
-        <p>
-          
-        </p>
-
       </header>
     </div>
   );
 }
-
 
 function App() {
   return (

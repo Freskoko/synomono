@@ -41,7 +41,17 @@
 .Convo {
   list-style-type:none;
   position: relative; right:17px;
-  
+}
+
+.container {
+  border:#010101;
+  border-radius:10%;
+  border-style:groove;
+  width: 300px;
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+  background-color: rgb(57, 38, 77);
 }
 
 .searchbarTop{
@@ -69,10 +79,11 @@
 
 .sidebar {
   position: absolute;
-  top: 10%;
+  top:10%;
   right: 0;
   margin-right: 20px;
   transform: translateY(-50%);
+  z-index: 9;
 }
 
 .sidebarguesses {
@@ -84,16 +95,6 @@
   transform: translateY(-50%);
 }
 
-.container {
-  border:#010101;
-  border-radius:10%;
-  border-style:groove;
-  width: 300px;
-  display: flex;
-  justify-content: space-between;
-  margin: 10px;
-  background-color: rgb(57, 38, 77);
-}
 
 .left {
   text-align: left;
@@ -114,6 +115,7 @@
   justify-content: center;
   align-items: center;
   color: #010101;
+  z-index: 10;
 }
 
 .overlay-content {
