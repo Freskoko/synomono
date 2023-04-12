@@ -3,7 +3,7 @@
 }
 
 .App-logo {
-  margin-top: 50px;
+  margin-top: 140px;
   height: 20vmin;
   pointer-events: none;
 }
@@ -79,9 +79,9 @@
 
 .sidebar {
   position: absolute;
-  top:10%;
-  right: 0;
-  margin-right: 20px;
+  top:8%;
+  /* right: 0; */
+  /* margin-right: 90px; */
   transform: translateY(-50%);
   z-index: 9;
 }
