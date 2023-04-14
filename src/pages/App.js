@@ -159,7 +159,7 @@ function GuessedSearchbar({ setanswerToQuestion, LongList}) {
         console.error('Error sending request:', error);
       }
       
-      setGuessed("is the word ")
+      setGuessed("is the word ") //Update search bar to make next search easieir
     }
   }
 

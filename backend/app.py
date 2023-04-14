@@ -73,8 +73,9 @@ def getwordandlist():
 
     return jsonify({"randomword": random_word.word, "wordlist": word_list}), 200
 
+app.route
 
-# TODO...
+
 @app.route("/getsimilarwordsfromid", methods=["POST"])
 def getsimilarwordsfromid():
 
@@ -93,7 +94,6 @@ def getsimilarwordsfromid():
     print(mainword.word)
 
     return jsonify({"randomword": mainword.word, "wordlist": word_list}), 200
-# TODO^^
 
 @app.route("/getallkeywords")
 def getallkeywords():
